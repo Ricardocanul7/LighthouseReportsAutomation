@@ -51,3 +51,7 @@ npm start
 
 - The application uses **Puppeteer** to manage an internal browser and generate PDFs. You don't need Google Chrome installed on your system.
 - The process is **sequential**: Only one URL and one strategy are processed at a time to ensure CPU availability and accurate performance metrics.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
