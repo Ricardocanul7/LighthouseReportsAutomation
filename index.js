@@ -19,10 +19,18 @@ async function runAudit() {
 
     await fs.ensureDir(outputDir);
 
+    // Check if urls.csv exists
+    const csvPath = path.join(__dirname, CSV_FILE);
+    if (!await fs.pathExists(csvPath)) {
+        console.error(`\n❌ ERROR: File "${CSV_FILE}" was not found.`);
+        console.log(`ℹ️  Please create "${CSV_FILE}" based on "urls.example.csv" and edit it with your target URLs.`);
+        return;
+    }
+
     // Read and parse CSV
     let urls = [];
     try {
-        const fileContent = await fs.readFile(path.join(__dirname, CSV_FILE));
+        const fileContent = await fs.readFile(csvPath);
         const records = parse(fileContent, {
             columns: true,
             skip_empty_lines: true,
@@ -64,7 +72,7 @@ async function runAudit() {
                 .replace(/[^a-z0-0.]/gi, '-');
 
             for (const strategy of strategies) {
-                console.log(`\nAuditando [${strategy.toUpperCase()}]: ${url}...`);
+                console.log(`\nAuditing [${strategy.toUpperCase()}]: ${url}...`);
 
                 // Launch fresh browser per audit for stability
                 const browser = await puppeteer.launch({
@@ -101,7 +109,7 @@ async function runAudit() {
                     });
 
                     if (!runnerResult || !runnerResult.report) {
-                        throw new Error(`No se pudo generar el reporte para: ${url}`);
+                        throw new Error(`Could not generate report for: ${url}`);
                     }
 
                     const reportHtml = runnerResult.report[1];
@@ -164,7 +172,7 @@ async function runAudit() {
 
                     console.log(`✅ PDF saved: ${path.basename(pdfPath)}`);
                 } catch (auditError) {
-                    console.error(`❌ Error auditando ${url} [${strategy}]:`, auditError.message);
+                    console.error(`❌ Error auditing ${url} [${strategy}]:`, auditError.message);
                 } finally {
                     // Always kill browser between audits to avoid CDP errors
                     await browser.close();
