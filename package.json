@@ -1,0 +1,16 @@
+{
+  "name": "lighthouse-automation",
+  "version": "1.0.0",
+  "description": "Automated Lighthouse audits with PDF/JSON reports",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "csv-parse": "^5.5.5",
+    "fs-extra": "^11.2.0",
+    "lighthouse": "^12.0.0",
+    "puppeteer": "^22.0.0"
+  }
+}
